@@ -73,6 +73,7 @@
   width: 45px;
   height: 45px;
   left: 3px;
+  margin-left: 5px;
 }
 #sendButton:hover {
   background-color: #22396fdf;

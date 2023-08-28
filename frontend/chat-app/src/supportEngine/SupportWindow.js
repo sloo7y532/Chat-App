@@ -9,6 +9,7 @@ import Fab from "@mui/material/Fab";
 import SendIcon from "@mui/icons-material/Send";
 import TextField from "@mui/material/TextField";
 import io from "socket.io-client";
+import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
 
 const socket = io.connect("http://localhost:3010");
 
@@ -16,6 +17,7 @@ export default function SupportWindow({ open, setOpen }) {
   const [textInput, setTextInput] = useState("");
   const [messageList, setMessageList] = useState([]);
   const [savedMessages, setSavedMessages] = useState([]);
+  const [file, setFile] = useState();
   var MessageData = {
     type: "",
     message: textInput,
@@ -59,7 +61,10 @@ export default function SupportWindow({ open, setOpen }) {
       setSavedMessages((list) => [...list, MessageData]);
     }
   };
-
+  function selectFile(e) {
+    setTextInput(e.target.files[0].namme);
+    setFile(e.target.files[0]);
+  }
   useEffect(() => {
     socket.on("receive_message", (input) => {
       input.type = "agent";
@@ -102,26 +107,26 @@ export default function SupportWindow({ open, setOpen }) {
           {/* CONTENT */}
           <div className="body">
             {/* <div className="body-continer"> */}
-              <ReactScrollableFeed>
-                {messageList.map((messageContent, i) => {
-                  return (
-                    <div
-                      className="message"
-                      key={i}
-                      id={messageContent.type === "client" ? "you" : "Experia"}
-                    >
-                      <div>
-                        <div className="message-content">
-                          <p className="message-p">{messageContent.message}</p>
-                        </div>
-                        <div className="message-meta">
-                          <p id="time">{messageContent.time}</p>
-                        </div>
+            <ReactScrollableFeed>
+              {messageList.map((messageContent, i) => {
+                return (
+                  <div
+                    className="message"
+                    key={i}
+                    id={messageContent.type === "client" ? "you" : "Experia"}
+                  >
+                    <div>
+                      <div className="message-content">
+                        <p className="message-p">{messageContent.message}</p>
+                      </div>
+                      <div className="message-meta">
+                        <p id="time">{messageContent.time}</p>
                       </div>
                     </div>
-                  );
-                })}
-              </ReactScrollableFeed>
+                  </div>
+                );
+              })}
+            </ReactScrollableFeed>
             {/* </div> */}
           </div>
           {/* ===CONTENT=== */}
@@ -138,6 +143,9 @@ export default function SupportWindow({ open, setOpen }) {
             />
             <Fab id="sendButton" aria-label="send">
               <SendIcon onClick={handleSendMessage} />
+            </Fab>
+            <Fab id="sendButton" type="file" aria-label="send">
+              <ImageOutlinedIcon onClick={selectFile} />
             </Fab>
             {/* <IconButton aria-label="share">
           <ShareIcon />
